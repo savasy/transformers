@@ -28,10 +28,12 @@ from . import __version__
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
+ENV_VARS_TRUE_VALUES = ("1", "ON", "YES", "AUTO")
+
 try:
     USE_TF = os.environ.get("USE_TF", "AUTO").upper()
     USE_TORCH = os.environ.get("USE_TORCH", "AUTO").upper()
-    if USE_TORCH in ("1", "ON", "YES", "AUTO") and USE_TF not in ("1", "ON", "YES"):
+    if USE_TORCH in ENV_VARS_TRUE_VALUES and USE_TF not in ("1", "ON", "YES"):
         import torch
 
         _torch_available = True  # pylint: disable=invalid-name
@@ -46,7 +48,7 @@ try:
     USE_TF = os.environ.get("USE_TF", "AUTO").upper()
     USE_TORCH = os.environ.get("USE_TORCH", "AUTO").upper()
 
-    if USE_TF in ("1", "ON", "YES", "AUTO") and USE_TORCH not in ("1", "ON", "YES"):
+    if USE_TF in ENV_VARS_TRUE_VALUES and USE_TORCH not in ("1", "ON", "YES"):
         import tensorflow as tf
 
         assert hasattr(tf, "__version__") and int(tf.__version__[0]) >= 2
@@ -57,6 +59,23 @@ try:
         _tf_available = False
 except (ImportError, AssertionError):
     _tf_available = False  # pylint: disable=invalid-name
+
+
+try:
+    USE_JAX = os.environ.get("USE_FLAX", "AUTO").upper()
+
+    if USE_JAX in ENV_VARS_TRUE_VALUES:
+        import jax
+        import flax
+
+        logger.info("JAX version {}, Flax: available".format(jax.__version__))
+
+        _flax_available = True
+    else:
+        _flax_available = False
+except ImportError:
+    _flax_available = False  # pylint: disable=invalid-name
+
 
 try:
     from torch.hub import _get_torch_home
@@ -103,6 +122,10 @@ def is_torch_available():
 
 def is_tf_available():
     return _tf_available
+
+
+def is_flax_available():
+    return _flax_available
 
 
 def add_start_docstrings(*docstr):
