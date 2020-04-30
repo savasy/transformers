@@ -87,9 +87,9 @@ from .file_utils import (
     add_end_docstrings,
     add_start_docstrings,
     cached_path,
+    is_flax_available,
     is_tf_available,
     is_torch_available,
-    is_flax_available
 )
 from .hf_argparser import HfArgumentParser
 
