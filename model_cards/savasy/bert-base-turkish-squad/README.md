@@ -34,8 +34,8 @@ I fine-tuned Turkish-Bert-Model for Question-Answering problem with Turkish vers
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering, pipeline
 import torch
 
-tokenizer = AutoTokenizer.from_pretrained("./model")
-model = AutoModelForQuestionAnswering.from_pretrained("./model")
+tokenizer = AutoTokenizer.from_pretrained("savasy/bert-base-turkish-squad"")
+model = AutoModelForQuestionAnswering.from_pretrained("savasy/bert-base-turkish-squad"")
 nlp=pipeline("question-answering", model=model, tokenizer=tokenizer)
 ```
 
